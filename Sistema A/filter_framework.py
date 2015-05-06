@@ -70,7 +70,33 @@ class FilterFramework(threading.Thread):
         except Exception as error:
             print "{0} Pipe read error::{1}", self.getName(), error
             return 0
-    
+        
+    def readIDFromFilterInputPort(self):
+        idLength = 4
+        try:
+            for(i in range(idLength):
+                datum = readFilterInputPort()
+                idD = idD | datum
+                if( i != idLength -1):
+                    idD = idD << 8
+            return idD
+         except Exception as error:
+            print "{0} Pipe read error::{1}", self.getName(), error
+            return 0
+                
+    def readMeasurementFromFilterInputPort(self):
+        measurementLength = 8
+        try:
+            for(i in range(idLength):
+                datum = readFilterInputPort()
+                idD = idD | datum
+                if( i != idLength -1):
+                    idD = idD << 8
+            return idD
+         except Exception as error:
+            print "{0} Pipe read error::{1}", self.getName(), error
+            return 0
+                
     def writeFilterOutputPort(self, data):
         """ Writes data to the output port one byte at a time..
 
@@ -82,8 +108,40 @@ class FilterFramework(threading.Thread):
             self.__outputWritePort.flush()
         except Exception as error:
             print "{0} Pipe write error::{1}".format(self.getName(), error)
-            
-            
+
+    def writeInt(self, data):
+        try:
+            #convertimos la medida de 8 bytes en un arreglo de 8 bytes
+            byteArray = struct.pack("@Q", data) 
+                    
+            for i in byteArray:
+                writeFilterOutputPort(i)
+                
+        except Exception as error:
+            print "{0} Pipe write error::{1}".format(self.getName(), error)
+                   
+    def writeDouble(self, data):
+        try:
+            #convertimos la medida de 8 bytes en un arreglo de 8 bytes
+            byteArray = struct.pack("@Q", data) 
+                    
+            for i in byteArray:
+                writeFilterOutputPort(i)
+                
+        except Exception as error:
+            print "{0} Pipe write error::{1}".format(self.getName(), error)
+                
+     def writeLong(self, data):
+        try:
+            #convertimos la medida de 8 bytes en un arreglo de 8 bytes
+            byteArray = struct.pack("@Q", data) 
+                    
+            for i in byteArray:
+                writeFilterOutputPort(i)
+                
+        except Exception as error:
+            print "{0} Pipe write error::{1}".format(self.getName(), error)
+                    
     def endOfInputStream(self):
         # Checks if the upstream filter is still alive. 
           
@@ -104,8 +162,6 @@ class FilterFramework(threading.Thread):
             Please see the example applications provided for more details. 
             """
         pass
-                
-
             
 
 
